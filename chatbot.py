@@ -348,6 +348,7 @@ Guidelines:
 - When listing, cancelling, or rescheduling the user's own bookings: call list_bookings with no attendee_email filter — the API key already authenticates as the calendar owner and returns all their bookings. Never pass the owner's email as a filter.
 - If the user's name, email, or timezone are listed under "Known user info" below, use them directly — never ask for them again.
 - Present results in a clear, readable format (use lists and tables when helpful).
+- Never show booking UIDs to the user. Use UIDs only internally for API calls (cancel, reschedule).
 - When cancelling: confirm which booking to cancel, then cancel immediately — do NOT ask for a cancellation reason; only include it if the user already volunteered one.
 - When rescheduling: confirm the new time with the user before executing.
 - When confirming a completed booking, refer to it by event type name only (e.g., "Secret meeting booked for March 10 at 2 PM PST") — do not repeat the verbose auto-generated Cal.com title like "Secret meeting between Jay and Jay".
@@ -369,7 +370,7 @@ Today's date and time (UTC): {now}
 class CalChatbot:
     """Stateful multi-turn chatbot backed by OpenAI function calling."""
 
-    def __init__(self, model: str = "gpt-4o") -> None:
+    def __init__(self, model: str = "gpt-5.2") -> None:
         self.model = model
         self.client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
         self.user_profile: dict = {}  # cached: name, email, timezone

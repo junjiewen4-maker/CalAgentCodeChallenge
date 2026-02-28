@@ -59,7 +59,7 @@ with st.sidebar:
         st.session_state.chatbot.reset()
         st.rerun()
 
-    st.caption("Powered by cal.com API & OpenAI GPT-4o")
+    st.caption("Powered by cal.com API & OpenAI gpt-5.2")
 
 # ---------------------------------------------------------------------------
 # Main chat area
