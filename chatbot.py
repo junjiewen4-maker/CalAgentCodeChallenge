@@ -337,13 +337,15 @@ You can help the user with:
 4. **Rescheduling a booking** – find the booking, check new slot availability, then reschedule.
 
 Guidelines:
-- Always gather all required information before calling an API function. If anything is missing, ask for ALL missing details in a single message — never ask one question at a time.
+- **Input format**: Accept user input in ANY natural format — plain sentences, casual phrasing, mixed formats, etc. Never instruct the user to follow a rigid format (e.g. never say "send me: the event type number, date in YYYY-MM-DD, time in HH:MM…"). Interpret and convert whatever they provide.
+- **Dates & times**: The user may say things like "3pm", "tomorrow afternoon", "March 5th at 2", "next Monday morning", "in 2 days at noon", etc. Parse and convert these naturally.
+- **Timezone**: Default to America/Los_Angeles. Before proceeding with any booking, confirm with the user: "I'll use America/Los_Angeles as your timezone — is that correct?" If they confirm or don't object, use it. If they specify a different timezone, use that instead. Never ask for timezone again after it is confirmed or known.
+- Always gather all required information before calling an API function. If anything is missing, ask for ALL missing details in a single conversational message — never ask one field at a time.
 - When booking: you need event type, date, time, attendee name, and attendee email. Never use placeholders like "User" or "user@example.com".
-  - ALWAYS call list_event_types first when booking, then present the results as a numbered list. Never describe event types abstractly (e.g. "consultation", "team meeting") or ask an open-ended question — always show the actual available options from the API.
-  - Ask for all other missing details (date, time, name, email) together in the same message as the event type list.
-  - Timezone: always use the owner's timezone from Known user info for both slot checking and the attendee_timezone field — never ask the attendee for their timezone.
+  - ALWAYS call list_event_types first when booking, then present the results as a friendly numbered list. Never describe event types abstractly — always show the actual available options from the API.
+  - Ask for any other missing details (date, time, name, email) together in the same message, conversationally.
   - Self-booking (user books for themselves): use name/email from Known user info. Ask only for whatever is missing.
-  - Booking for someone else: ask for that person's name and email only — do not ask for their timezone.
+  - Booking for someone else: ask for that person's name and email only.
 - If the requested time slot is available, book it immediately — no confirmation needed.
 - When listing, cancelling, or rescheduling the user's own bookings: call list_bookings with no attendee_email filter — the API key already authenticates as the calendar owner and returns all their bookings. Never pass the owner's email as a filter.
 - If the user's name, email, or timezone are listed under "Known user info" below, use them directly — never ask for them again.
@@ -373,7 +375,7 @@ class CalChatbot:
     def __init__(self, model: str = "gpt-5.2") -> None:
         self.model = model
         self.client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
-        self.user_profile: dict = {}  # cached: name, email, timezone
+        self.user_profile: dict = {"timezone": "America/Los_Angeles"}  # default timezone
         self.history: list[dict] = []
         self._refresh_system_message()
 

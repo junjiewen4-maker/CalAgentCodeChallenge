@@ -76,11 +76,11 @@ for msg in st.session_state.messages:
 if not st.session_state.messages:
     with st.chat_message("assistant"):
         welcome = (
-            "Hello! I'm your Cal.com AI assistant. I can help you:\n\n"
-            "- 📅 **Book** a new meeting\n"
-            "- 📋 **List** your scheduled events\n"
-            "- ❌ **Cancel** a booking\n"
-            "- 🔄 **Reschedule** a meeting\n\n"
+            "Hello! I'm your Cal.com AI assistant. I can help you book, view, cancel, or reschedule meetings.\n\n"
+            "Just tell me what you'd like to do in your own words — for example:\n"
+            "- \"Book a meeting for next Tuesday at 3pm\"\n"
+            "- \"Show my upcoming events\"\n"
+            "- \"Cancel my meeting on Friday\"\n\n"
             "What would you like to do today?"
         )
         st.markdown(welcome)
